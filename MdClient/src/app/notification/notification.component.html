@@ -2,7 +2,7 @@
 <div *ngFor="let tran of trans">
   <div class="messageContainer">
     <div class="messageData">
-      <a href="#" class="list-group-item clearfix" (click)="onSelected()">
+      <a class="list-group-item clearfix" (click)="onSelected()">
         <div class="pull-left" >
           <!--<div>-->
             <!--{{ tran.lender_id }}-->
@@ -13,7 +13,8 @@
             <li class="list-inline-item">Borrower : {{ tran.borrower_id }}</li>
             <li class="list-inline-item">Status : {{ tran.status }}</li>
             <li class="list-inline-item">Transaction Date : {{ tran.transactionDate }}</li>
-            <!-- <li class="list-inline-item"><button class="btn btn-success" >Delete</button></li> -->
+            <li class="list-inline-item"><button class="btn btn-danger" (click)="deleteTransaction(tran); $event.stopPropagation();">Reject</button></li>
+            <li class="list-inline-item"><button class="btn btn-success" (click)="deleteTransaction(tran); $event.stopPropagation();">Accept</button></li>
           </ul>
           <!-- <h4 class="list-group-item-heading"></h4>
           <p class="list-group-item-text">

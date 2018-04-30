@@ -37,13 +37,13 @@ exports.getUser = function (params, callback) {
 
 exports.getLoginDetails = function (params, callback) {
     let id = params.userName;
-    
+
     let resultCallback = function (err, data) {
         throwError(err);
         callback(data);
         console.log(data.userName);
     };
-    Login.findOne({userName:id}, resultCallback);
+    Login.findOne({ userName: id }, resultCallback);
 };
 exports.getTransactionDetails = function (params, callback) {
     let resultCallback = function (err, data) {
@@ -54,30 +54,30 @@ exports.getTransactionDetails = function (params, callback) {
 };
 
 //Authenticate User
-exports.validateUserCredentials = function(params,callback){
+exports.validateUserCredentials = function (params, callback) {
 
     let userName = params.userName;
     let password = params.password;
     console.log("Inside Server Authentication service module: Input is: " + userName + "  " + password);
-    let resultCallback = function (err,login ) {
-        if (err){
+    let resultCallback = function (err, login) {
+        if (err) {
             console.log('Username not found');
             throwError(err);
         }
         console.log("Inside Server Authentication service module output is: " + login);
-       callback(login);
+        callback(login);
     }
-    Login.findOne({ userName:userName ,password:password },resultCallback);
+    Login.findOne({ userName: userName, password: password }, resultCallback);
 
 };
 
 //get User for a given user ID
 
-exports.getUserById = function(params,callback){
+exports.getUserById = function (params, callback) {
 
     let id = params.id;
-    let resultCallback = function (err,user ) {
-        if (err){
+    let resultCallback = function (err, user) {
+        if (err) {
             console.log('Username not found');
             throwError(err);
         }
@@ -92,29 +92,29 @@ exports.getUserById = function(params,callback){
 
 // get Transaction history for a given user id
 
-exports.getTransactionHistory = function(params,callback){
+exports.getTransactionHistory = function (params, callback) {
 
     let id = params.user_id;
     // var ObjectId = require('mongoose').Types.ObjectId;
     // var objId = new ObjectId( (param.length < 12) ? "123456789012" : param );
-    let resultCallback = function (err,transaction ) {
-        if (err){
+    let resultCallback = function (err, transaction) {
+        if (err) {
             console.log('Username not found');
             throwError(err);
         }
         callback(transaction);
     }
-    Transaction.find( { $or:[ {borrower_id:id}, {lender_id:id} ]}, resultCallback);
+    Transaction.find({ $or: [{ borrower_id: id }, { lender_id: id }] }, resultCallback);
 
 };
 
 // Service for saving the newly created User
-exports.registerUser = function(params,callback){
+exports.registerUser = function (params, callback) {
 
     let user = new User(params.reg);
     console.log(user);
-    let resultCallback = function (err,user ) {
-        if (err){
+    let resultCallback = function (err, user) {
+        if (err) {
             console.log('Saving User failed for Register User');
             throwError(err);
         }
@@ -126,12 +126,12 @@ exports.registerUser = function(params,callback){
 };
 
 //Create a new Transaction Document between lender and borrower
-exports.createTransaction = function(params,callback){
+exports.createTransaction = function (params, callback) {
 
     let transaction = new Transaction(params);
-  //  console.log(transaction);
-    let resultCallback = function (err,transaction ) {
-        if (err){
+    //  console.log(transaction);
+    let resultCallback = function (err, transaction) {
+        if (err) {
             console.log('Creating Transaction Record failed');
             throwError(err);
         }
@@ -152,61 +152,68 @@ exports.createTransaction = function(params,callback){
 //     //Wallet.find(params, resultCallback);
 // };
 
-exports.getWallet = function(params,callback){
+exports.getWallet = function (params, callback) {
 
     let id = params.id;
-   
-    let resultCallback = function (err,wallet) {
-        if (err){
+
+    let resultCallback = function (err, wallet) {
+        if (err) {
             console.log('Username not found');
             throwError(err);
         }
-      //console.log("inside wallet server service" + wallet);
+        //console.log("inside wallet server service" + wallet);
         callback(wallet);
     }
-    Wallet.findOne({user_id: id}, resultCallback);
+    Wallet.findOne({ user_id: id }, resultCallback);
 
 };
 
-exports.addMoney = function(adding,callback)
-{
+exports.addMoney = function (adding, callback) {
     console.log("addiing money to " + adding.wallet);
-    Wallet.findOne({user_id :adding.wallet.user_id},function(err,wall){
-        if(wall !=null){
+    Wallet.findOne({ user_id: adding.wallet.user_id }, function (err, wall) {
+        if (wall != null) {
             wall.balance = Number(adding.amount) + wall.balance;
-            
+
             console.log("added amount" + wall.balance);
-            wall.save(function(err,adding)
-        {
-                if(err){
+            wall.save(function (err, adding) {
+                if (err) {
                     console.log('ERROR!');
                 };
                 callback(adding);
-        });
+            });
         }
     });
 }
-exports.deleteTransaction = function(transac,callback)
-{
-    console.log(transac._id);
+exports.deleteTransaction = function (params, callback) {
 
-    Transaction.findOne({_id : transac._id},function(err,tran){
-        if(tran !=null){
-      
-            Transaction.remove({_id : transac._id});
-     
+
+
+    Transaction.findOne({ _id: params.transac._id }, function (err, tran) {
+        //console.log(tran);
+        if (tran != null) {
+
+            tran.status = "Rejected";
+
+            tran.save(function (err) {
+                if (err) {
+                    console.log('ERROR!');
+                };
+                console.log(tran);
+
+            });
+
         }
-        else{
+        else {
             console.log("tramsaction not present");
         }
     });
 }
-exports.createNewUserWallet = function(params,callback){
+exports.createNewUserWallet = function (params, callback) {
 
     let wallet = new Wallet(params.wallet);
     console.log(wallet);
-    let resultCallback = function (err,data ) {
-        if (err){
+    let resultCallback = function (err, data) {
+        if (err) {
             console.log('Creating Wallet failed');
             throwError(err);
         }
@@ -215,12 +222,12 @@ exports.createNewUserWallet = function(params,callback){
     wallet.save(resultCallback);
 };
 
-exports.createNewUserLogin = function(params,callback){
+exports.createNewUserLogin = function (params, callback) {
 
     let login = new Login(params.userlogin);
     console.log(login);
-    let resultCallback = function (err,data ) {
-        if (err){
+    let resultCallback = function (err, data) {
+        if (err) {
             console.log('Creating New User Login Record failed');
             throwError(err);
         }
@@ -229,30 +236,29 @@ exports.createNewUserLogin = function(params,callback){
     login.save(resultCallback);
 };
 
-exports.searchUsers = function(params,callback){
+exports.searchUsers = function (params, callback) {
 
     let searchParam = params.searchParam;
     console.log();
-    let resultCallback = function (err,data ) {
-        if (err){
+    let resultCallback = function (err, data) {
+        if (err) {
             console.log('Creating New User Login Record failed');
             throwError(err);
         }
         callback(data);
     }
-    User.find({$or:[{firstName: { $regex:new RegExp( '.*' + searchParam + '.*',"i") }},{lastName: { $regex:new RegExp('.*' + searchParam + '.*',"i")}}]},resultCallback);
+    User.find({ $or: [{ firstName: { $regex: new RegExp('.*' + searchParam + '.*', "i") } }, { lastName: { $regex: new RegExp('.*' + searchParam + '.*', "i") } }] }, resultCallback);
     //User.find({firstName: { $regex: '.*' + searchParam + '.*' } }).limit(5)
 };
 
-exports.updateWallet = function(adding,callback)
-{
+exports.updateWallet = function (adding, callback) {
     //console.log("addiing money to " + adding.amount);
-    let amount=Number(adding.amount);
+    let amount = Number(adding.amount);
     //console.log("addiing money to " + adding.amount);
     let resultCallback = function (err, wallet) {
         throwError(err);
         callback(wallet);
         console.log("updated Balance is" + wallet.balance);
     };
-    Wallet.findOneAndUpdate({user_id: adding.wallet.user_id},{$inc: {balance: amount}},{ new: true}, resultCallback );
+    Wallet.findOneAndUpdate({ user_id: adding.wallet.user_id }, { $inc: { balance: amount } }, { new: true }, resultCallback);
 }

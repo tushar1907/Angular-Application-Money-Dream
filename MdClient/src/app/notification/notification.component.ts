@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Transaction } from '../../model/transactionModel';
 import {TransactionBorrowerSerivce} from '../../service/transactionborrower.service'
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-notification',
@@ -14,8 +15,12 @@ export class NotificationComponent implements OnInit {
   tranc: Transaction[] = [];
   trans: Transaction[] = [];
 
-  constructor(private transactionBorrowerService : TransactionBorrowerSerivce) {
+  constructor(private transactionBorrowerService : TransactionBorrowerSerivce,private route: ActivatedRoute,
+    private router: Router) {
     this.transactionBorrowerService = transactionBorrowerService;
+    this.route = route;
+    this.router = router;
+
    }
 
   ngOnInit() {
@@ -57,7 +62,7 @@ export class NotificationComponent implements OnInit {
 
   deleteTransaction(transac : Transaction){
 
-
+    console.log(transac);
     this.transactionBorrowerService.deleteTransaction(transac).then(
       data=>{
         
@@ -65,6 +70,9 @@ export class NotificationComponent implements OnInit {
       }
     )    
 
+    //this.router.navigate(['dashboard']);
+    this.trans = [];
+    this.ngOnInit();
 
   }
 

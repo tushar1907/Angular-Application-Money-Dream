@@ -119,7 +119,7 @@ exports.addToWallet = function (request, response)
 };
 exports.deleteTransaction = function (request, response)
 {
-    console.log("Inside add wallet controller" + request.body);
+    console.log("Transaction data" + request.body);
     let params = request.body,
     callback = function (data) {
         response.status(200);

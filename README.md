@@ -28,9 +28,13 @@ At the bin folder of mongo folder in bin path db => mondod
 MongoDb
 
 git clone https://github.com/tushar1907/Money-Dream.git
+
 cd MDServer
+
 npm install
+
 cd MDClient
+
 npm install
 
 .

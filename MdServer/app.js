@@ -21,6 +21,8 @@ app.use(function (req, res, next) {
     next();
 });
 
+
+
 //Initialize app
 let initApp = require('./api/app');
 initApp(app);
